@@ -40,13 +40,48 @@ By default, the installer copies `smart-rn.sh` to `~/.smart-rn.sh` and appends t
 [ -f "$HOME/.smart-rn.sh" ] && . "$HOME/.smart-rn.sh"
 ```
 
-To install into a specific file:
+The rc entry is wrapped in a managed block so it can be updated or removed safely:
+
+```sh
+# >>> smart-runner-aliases >>>
+# Managed by smart-runner-aliases/install.sh
+[ -f "$HOME/.smart-rn.sh" ] && . "$HOME/.smart-rn.sh"
+# <<< smart-runner-aliases <<<
+```
+
+Choose which shell files to update:
+
+```sh
+./install.sh --shell zsh
+./install.sh --shell bash
+./install.sh --shell both
+```
+
+Remove the managed block later:
+
+```sh
+./install.sh --remove --shell both
+```
+
+Remove the managed block and delete the installed helper file:
+
+```sh
+./install.sh --remove --shell both --delete-target
+```
+
+Install into a specific file:
 
 ```sh
 ./install.sh --target "$HOME/.pnpm-shell-aliases" --no-rc
 ```
 
 That mode is useful if another dotfile already sources `~/.pnpm-shell-aliases`.
+
+Use a custom rc file:
+
+```sh
+./install.sh --rc "$HOME/.profile"
+```
 
 ## Convenience Aliases
 
@@ -65,5 +100,5 @@ nt='r test'
 
 ```sh
 bash test/smart-rn.test.sh
+bash test/install.test.sh
 ```
-
