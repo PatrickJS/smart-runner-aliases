@@ -65,6 +65,15 @@ make_project npm-project
 make_project deno-project
 : > "$tmpdir/deno-project/deno.json"
 
+make_project deno-with-pnpm-lock
+: > "$tmpdir/deno-with-pnpm-lock/deno.json"
+: > "$tmpdir/deno-with-pnpm-lock/pnpm-lock.yaml"
+
+make_project deno-package-manager
+cat > "$tmpdir/deno-package-manager/package.json" <<'PACKAGE'
+{"packageManager":"deno@2.4.0"}
+PACKAGE
+
 make_project uv-project
 : > "$tmpdir/uv-project/uv.lock"
 
@@ -104,6 +113,8 @@ for shell_bin in /bin/bash /bin/zsh; do
   expect "$shell_bin" "$shell_name npm r" "$tmpdir/npm-project" "r test" "npm run test"
   expect "$shell_bin" "$shell_name npm n i" "$tmpdir/npm-project" "n i" "npm install"
   expect "$shell_bin" "$shell_name deno r" "$tmpdir/deno-project" "r test" "deno task test"
+  expect "$shell_bin" "$shell_name deno beats pnpm lock" "$tmpdir/deno-with-pnpm-lock" "r dev" "deno task dev"
+  expect "$shell_bin" "$shell_name deno packageManager profile" "$tmpdir/deno-package-manager" "r test" "deno task test"
   expect "$shell_bin" "$shell_name deno guard" "$tmpdir/deno-project" "n i" "smart-rn: 'install' is npm-style; use deno add/cache/task directly in Deno projects"
   expect "$shell_bin" "$shell_name uv r" "$tmpdir/uv-project" "r pytest" "uv run pytest"
   expect "$shell_bin" "$shell_name uv sync" "$tmpdir/uv-project" "n i" "uv sync"

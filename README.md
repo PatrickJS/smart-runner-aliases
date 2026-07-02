@@ -9,9 +9,10 @@ Small bash/zsh helper that makes `r` and `n` choose the right project runner fro
 | Project signal | Command |
 | --- | --- |
 | `bun.lock` / `bun.lockb` | `bun run <command>` |
+| `deno.json`, `deno.jsonc`, or `deno.lock` | `deno task <command>` |
+| `packageManager: "deno@..."` | `deno task <command>` |
 | `pnpm-lock.yaml` | `pnpm run <command>` |
 | `package-lock.json` / `npm-shrinkwrap.json` | `npm run <command>` |
-| `deno.json`, `deno.jsonc`, or `deno.lock` | `deno task <command>` |
 | `uv.lock` | `uv run <command>` |
 | `poetry.lock` | `poetry run <command>` |
 | `pdm.lock` | `pdm run <command>` |
@@ -24,7 +25,7 @@ Small bash/zsh helper that makes `r` and `n` choose the right project runner fro
 | `n i requests` | `uv add requests` | `poetry add requests` | `pdm add requests` |
 | `n ci` | `uv sync --frozen` | `poetry check --lock && poetry sync` | `pdm lock --check && pdm install --frozen-lockfile` |
 
-Lockfiles win over config fields. Detection walks upward from the current directory and stops at the nearest `.git` boundary so an unrelated parent folder cannot steal resolution.
+Deno manifests win over JavaScript package-manager lockfiles in the same directory, so Deno projects with leftover or tooling-created pnpm/npm artifacts still run with Deno. Other lockfiles win over config fields. Detection walks upward from the current directory and stops at the nearest `.git` boundary so an unrelated parent folder cannot steal resolution.
 
 ## Install
 

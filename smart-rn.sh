@@ -18,16 +18,16 @@ __sr_manager_from_lockfiles() {
     printf '%s\n' bun
     return 0
   fi
+  if __sr_has_file "$dir/deno.lock" || __sr_has_file "$dir/deno.json" || __sr_has_file "$dir/deno.jsonc"; then
+    printf '%s\n' deno
+    return 0
+  fi
   if __sr_has_file "$dir/pnpm-lock.yaml"; then
     printf '%s\n' pnpm
     return 0
   fi
   if __sr_has_file "$dir/package-lock.json" || __sr_has_file "$dir/npm-shrinkwrap.json"; then
     printf '%s\n' npm
-    return 0
-  fi
-  if __sr_has_file "$dir/deno.lock" || __sr_has_file "$dir/deno.json" || __sr_has_file "$dir/deno.jsonc"; then
-    printf '%s\n' deno
     return 0
   fi
   if __sr_has_file "$dir/uv.lock"; then
@@ -59,7 +59,7 @@ __sr_package_manager_from_package_json() {
       const pkg = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
       const value = typeof pkg.packageManager === "string" ? pkg.packageManager : "";
       const manager = value.split("@")[0];
-      if (["bun", "pnpm", "npm"].includes(manager)) process.stdout.write(manager);
+      if (["bun", "pnpm", "npm", "deno"].includes(manager)) process.stdout.write(manager);
     } catch {}
   ' "$file" 2>/dev/null
 }
